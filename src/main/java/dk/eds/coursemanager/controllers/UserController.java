@@ -1,5 +1,6 @@
 package dk.eds.coursemanager.controllers;
 
+import dk.eds.coursemanager.annotations.LoginRequired;
 import dk.eds.coursemanager.models.Token;
 import dk.eds.coursemanager.models.User;
 import dk.eds.coursemanager.repositories.*;
@@ -35,11 +36,13 @@ public class UserController {
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @GetMapping
+    @LoginRequired
     public ResponseEntity<List<UserResource>> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll().stream().map(UserResource::new).collect(Collectors.toList()));
     }
 
     @GetMapping("{username}")
+    @LoginRequired
     public ResponseEntity<UserResource> getUser(@PathVariable("username") String username) {
         if (!userRepository.existsByUsername(username)) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(new UserResource(userRepository.getUserByUsername(username)));
@@ -59,12 +62,11 @@ public class UserController {
     @PostMapping("{username}")
     public ResponseEntity authenticateUser(@PathVariable("username") String username, @Valid @RequestBody User user) {
         if (userRepository.existsByUsername(username)) {
-            if (user.isValid()) {
+            if (user.isValid(userRepository.getUserByUsername(username))) {
                 Token token = tokenRepository.save(Token.generate(user));
                 return ResponseEntity.ok(token.getToken());
             }
         }
         return ResponseEntity.status(401).build();
-
     }
 }

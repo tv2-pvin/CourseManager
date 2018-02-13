@@ -1,7 +1,8 @@
 package dk.eds.coursemanager.models;
 
+import dk.eds.coursemanager.repositories.TokenRepository;
 import org.hibernate.validator.constraints.NotBlank;
-import sun.security.provider.MD5;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,8 +11,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "token")
 public class Token {
-
-    private static MD5 md5;
 
     @Id
     @GeneratedValue
@@ -98,5 +97,12 @@ public class Token {
         t.setUser(user);
         t.setToken(UUID.randomUUID().toString());
         return t;
+    }
+
+    public static boolean validate(String token, TokenRepository tokenRepository, String username) {
+        return !StringUtils.isEmpty(token) && !StringUtils.containsWhitespace(token) &&
+                !StringUtils.isEmpty(username) && !StringUtils.containsWhitespace(username) &&
+                tokenRepository.getByTokenAndIsDeletedFalse(token) != null &&
+                tokenRepository.getByTokenAndIsDeletedFalse(token).getUser().getUsername().equals(username);
     }
 }

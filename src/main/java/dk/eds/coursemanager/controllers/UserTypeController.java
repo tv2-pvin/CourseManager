@@ -1,5 +1,6 @@
 package dk.eds.coursemanager.controllers;
 
+import dk.eds.coursemanager.annotations.LoginRequired;
 import dk.eds.coursemanager.models.UserType;
 import dk.eds.coursemanager.repositories.CityRepository;
 import dk.eds.coursemanager.repositories.LocationRepository;
@@ -29,6 +30,7 @@ public class UserTypeController {
 
 
     @GetMapping("{id}/users")
+    @LoginRequired
     public ResponseEntity<List<UserResource>> getAllUsersForUserType(@PathVariable("id") Long id) {
         if (userTypeRepository.exists(id)) {
             return ResponseEntity.ok(
@@ -42,11 +44,13 @@ public class UserTypeController {
     }
 
     @PostMapping
+    @LoginRequired
     public UserType createUserType(@Valid @RequestBody UserType userType) {
         return userTypeRepository.save(userType);
     }
 
     @GetMapping("{id}")
+    @LoginRequired
     public ResponseEntity<UserType> getUserType(@PathVariable("id") Long id) {
         if (userTypeRepository.exists(id))
             return ResponseEntity.ok(userTypeRepository.findOne(id));

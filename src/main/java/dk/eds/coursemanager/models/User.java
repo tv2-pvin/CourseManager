@@ -2,6 +2,7 @@ package dk.eds.coursemanager.models;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 
@@ -111,7 +112,7 @@ public class User {
         this.location = location;
     }
 
-    public boolean isValid() {
-        return false;
+    public boolean isValid(User userByUsername) {
+        return username.equals(userByUsername.getUsername()) && new BCryptPasswordEncoder().encode(password).equals(userByUsername.getPassword());
     }
 }

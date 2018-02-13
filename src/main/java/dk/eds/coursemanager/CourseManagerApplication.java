@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 public class CourseManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CourseManagerApplication.class, args);
+        SpringApplication application = new SpringApplication(CourseManagerApplication.class);
+        application.run(args);
     }
 }
