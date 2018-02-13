@@ -110,4 +110,8 @@ public class User {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public boolean isValid() {
+        return false;
+    }
 }

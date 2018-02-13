@@ -13,7 +13,7 @@ public class UserResource extends ResourceSupport {
 
     public UserResource(User user) {
         this.user = user;
-        this.add(linkTo(methodOn(UserController.class).getUser(user.getUserType().getId(), user.getUsername())).withSelfRel());
+        this.add(linkTo(methodOn(UserController.class).getUser(user.getUsername())).withSelfRel());
     }
 
     public User getUser() {

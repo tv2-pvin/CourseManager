@@ -1,6 +1,6 @@
 package dk.eds.coursemanager.resources;
 
-import dk.eds.coursemanager.controllers.UserController;
+import dk.eds.coursemanager.controllers.UserTypeController;
 import dk.eds.coursemanager.models.UserType;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -13,8 +13,8 @@ public class UserTypeResource extends ResourceSupport {
 
     public UserTypeResource(UserType userType) {
         this.userType = userType;
-        this.add(linkTo(methodOn(UserController.class).getUserType(userType.getId())).withSelfRel());
-        this.add(linkTo(methodOn(UserController.class).getAllUsersForUserType(userType.getId())).withRel("users"));
+        this.add(linkTo(methodOn(UserTypeController.class).getUserType(userType.getId())).withSelfRel());
+        this.add(linkTo(methodOn(UserTypeController.class).getAllUsersForUserType(userType.getId())).withRel("users"));
     }
 
     public UserType getUserType() {
