@@ -1,10 +1,8 @@
 package dk.eds.coursemanager.controllers;
 
+import dk.eds.coursemanager.models.Token;
 import dk.eds.coursemanager.models.User;
-import dk.eds.coursemanager.repositories.CityRepository;
-import dk.eds.coursemanager.repositories.LocationRepository;
-import dk.eds.coursemanager.repositories.UserRepository;
-import dk.eds.coursemanager.repositories.UserTypeRepository;
+import dk.eds.coursemanager.repositories.*;
 import dk.eds.coursemanager.resources.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +29,8 @@ public class UserController {
     CityRepository cityRepository;
     @Autowired
     UserTypeRepository userTypeRepository;
+    @Autowired
+    TokenRepository tokenRepository;
 
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
@@ -60,7 +60,8 @@ public class UserController {
     public ResponseEntity authenticateUser(@PathVariable("username") String username, @Valid @RequestBody User user) {
         if (userRepository.existsByUsername(username)) {
             if (user.isValid()) {
-
+                Token token = tokenRepository.save(Token.generate(user));
+                return ResponseEntity.ok(token.getToken());
             }
         }
         return ResponseEntity.status(401).build();
