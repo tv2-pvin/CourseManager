@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_type")
 @EntityListeners(AuditingEntityListener.class)
-public class UserType {
+public class PersonType {
 
     @Id
     @GeneratedValue
@@ -15,10 +15,10 @@ public class UserType {
     @Column(nullable = false)
     private String typeName;
 
-    public UserType() {
+    public PersonType() {
     }
 
-    public UserType(String typeName) {
+    public PersonType(String typeName) {
         this.typeName = typeName;
     }
 

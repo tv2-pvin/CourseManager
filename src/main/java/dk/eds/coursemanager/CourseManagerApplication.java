@@ -3,15 +3,14 @@ package dk.eds.coursemanager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
 @EntityScan
-@EnableWebSecurity
+@EnableResourceServer
 public class CourseManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(CourseManagerApplication.class);
-        application.run(args);
+        SpringApplication.run(CourseManagerApplication.class, args);
     }
 }
