@@ -14,6 +14,7 @@ public class CourseTypeResource extends ResourceSupport {
     public CourseTypeResource(CourseType courseType) {
         this.courseType = courseType;
         this.add(linkTo(methodOn(CourseTypeController.class).getCourseType(courseType.getId())).withSelfRel());
+        this.add(linkTo(methodOn(CourseTypeController.class).getCoursesByCourseType(courseType.getId())).withRel("courses"));
     }
 
     public CourseType getCourseType() {

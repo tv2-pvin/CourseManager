@@ -36,6 +36,7 @@ public class PersonTypeController {
             return ResponseEntity.ok(
                     personRepository.findPeopleByPersonType(type)
                             .stream()
+                            .filter(p -> p.getUser().isEnabled())
                             .map(PersonResource::new)
                             .collect(Collectors.toList())
             );

@@ -3,7 +3,6 @@ package dk.eds.coursemanager.models;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -18,6 +17,9 @@ public class Course {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private CourseType courseType;
+
+    public Course() {
+    }
 
     public Course(String name, CourseType courseType) {
         this.name = name;

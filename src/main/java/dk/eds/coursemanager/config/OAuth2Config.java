@@ -41,7 +41,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("gigy").secret("secret").accessTokenValiditySeconds(expiration)
+        clients.inMemory().withClient("eds").secret("elitedans").accessTokenValiditySeconds(expiration)
                 .scopes("read", "write").authorizedGrantTypes("password", "refresh_token").resourceIds("resource");
     }
 }

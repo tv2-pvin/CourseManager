@@ -1,7 +1,9 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.CourseType;
+import dk.eds.coursemanager.repositories.CourseRepository;
 import dk.eds.coursemanager.repositories.CourseTypeRepository;
+import dk.eds.coursemanager.resources.CourseResource;
 import dk.eds.coursemanager.resources.CourseTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,12 @@ import java.util.stream.Collectors;
 public class CourseTypeController {
 
     private final CourseTypeRepository courseTypeRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseTypeController(CourseTypeRepository courseTypeRepository) {
+    public CourseTypeController(CourseTypeRepository courseTypeRepository, CourseRepository courseRepository) {
         this.courseTypeRepository = courseTypeRepository;
+        this.courseRepository = courseRepository;
     }
 
 
@@ -48,5 +52,28 @@ public class CourseTypeController {
         } catch (Exception e) {
             return ResponseEntity.status(304).build();
         }
+    }
+
+    @PutMapping("id")
+    public ResponseEntity updateCourseType(@PathVariable("id") Long id, @Valid @RequestBody CourseType update) {
+        if (!courseTypeRepository.exists(id)) return ResponseEntity.notFound().build();
+        try {
+            CourseType original = courseTypeRepository.findOne(id);
+            original.setTypeName(update.getTypeName());
+            courseTypeRepository.save(original);
+            return ResponseEntity.accepted().build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(304).build();
+        }
+    }
+
+    @GetMapping("{id}/courses")
+    public ResponseEntity<List<CourseResource>> getCoursesByCourseType(@PathVariable("id") Long id) {
+        if (!courseTypeRepository.exists(id)) return ResponseEntity.notFound().build();
+        List<CourseResource> courseResources = courseRepository.findAllByCourseType(courseTypeRepository.findOne(id))
+                .stream()
+                .map(CourseResource::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(courseResources);
     }
 }

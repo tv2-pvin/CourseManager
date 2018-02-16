@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    Person findPersonByUser(User user);
+    Person findPersonByUser_Username(String username);
 
     List<Person> findPeopleByPersonType(PersonType personType);
 }
