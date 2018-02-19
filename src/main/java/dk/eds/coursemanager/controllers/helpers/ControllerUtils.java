@@ -2,14 +2,13 @@ package dk.eds.coursemanager.controllers.helpers;
 
 import dk.eds.coursemanager.models.City;
 import dk.eds.coursemanager.models.Location;
-import dk.eds.coursemanager.models.Person;
 import dk.eds.coursemanager.repositories.CityRepository;
 import dk.eds.coursemanager.repositories.LocationRepository;
 
 public class ControllerUtils {
 
     public static Location createOrFetchLocation(Location loc, LocationRepository locationRepository, CityRepository cityRepository) {
-        createOrFetchCity(loc, cityRepository);
+        loc.setCity(createOrFetchCity(loc, cityRepository));
         if (locationRepository.existsLocationByRoadNameAndRoadNumberAndRoadNumberDetailAndCity_ZipCode(loc.getRoadName(), loc.getRoadNumber(), loc.getRoadNumberDetail(), loc.getCity().getZipCode()))
             return locationRepository.getLocationByRoadNameAndRoadNumberAndRoadNumberDetailAndCity_ZipCode(loc.getRoadName(), loc.getRoadNumber(), loc.getRoadNumberDetail(), loc.getCity().getZipCode());
         else
