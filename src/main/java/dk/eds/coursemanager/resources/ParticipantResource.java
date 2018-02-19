@@ -1,9 +1,8 @@
 package dk.eds.coursemanager.resources;
 
 import dk.eds.coursemanager.models.Participant;
-import org.springframework.hateoas.ResourceSupport;
 
-public class ParticipantResource extends ResourceSupport {
+public class ParticipantResource extends ResourceSupportBase {
 
     private final Participant participant;
 

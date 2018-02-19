@@ -1,9 +1,8 @@
 package dk.eds.coursemanager.resources;
 
 import dk.eds.coursemanager.models.Booking;
-import org.springframework.hateoas.ResourceSupport;
 
-public class BookingResource extends ResourceSupport {
+public class BookingResource extends ResourceSupportBase {
 
     private final Booking booking;
 

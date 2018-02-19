@@ -3,7 +3,6 @@ package dk.eds.coursemanager.models;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "participant")
@@ -15,13 +14,13 @@ public class Participant {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
+    private Person participant;
     @ManyToOne(fetch = FetchType.EAGER)
     private ParticipantType participantType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Course course;
 
-    public Participant(User user, ParticipantType participantType) {
-        this.user = user;
-        this.participantType = participantType;
+    public Participant() {
     }
 
     public Long getId() {
@@ -32,12 +31,12 @@ public class Participant {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Person getParticipant() {
+        return participant;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setParticipant(Person participant) {
+        this.participant = participant;
     }
 
     public ParticipantType getParticipantType() {
@@ -48,4 +47,11 @@ public class Participant {
         this.participantType = participantType;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 }

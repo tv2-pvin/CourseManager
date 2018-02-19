@@ -3,7 +3,7 @@ package dk.eds.coursemanager.resources;
 import dk.eds.coursemanager.models.City;
 import org.springframework.hateoas.ResourceSupport;
 
-public class CityResource extends ResourceSupport {
+public class CityResource extends ResourceSupportBase {
 
     private final City city;
 

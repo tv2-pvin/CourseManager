@@ -1,10 +1,10 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.CourseType;
-import dk.eds.coursemanager.repositories.CourseRepository;
 import dk.eds.coursemanager.repositories.CourseTypeRepository;
-import dk.eds.coursemanager.resources.CourseResource;
+import dk.eds.coursemanager.repositories.DiscountRepository;
 import dk.eds.coursemanager.resources.CourseTypeResource;
+import dk.eds.coursemanager.resources.DiscountResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class CourseTypeController {
 
     private final CourseTypeRepository courseTypeRepository;
-    private final CourseRepository courseRepository;
+    private final DiscountRepository discountRepository;
 
     @Autowired
-    public CourseTypeController(CourseTypeRepository courseTypeRepository, CourseRepository courseRepository) {
+    public CourseTypeController(CourseTypeRepository courseTypeRepository, DiscountRepository discountRepository) {
         this.courseTypeRepository = courseTypeRepository;
-        this.courseRepository = courseRepository;
+        this.discountRepository = discountRepository;
     }
 
 
@@ -35,8 +35,8 @@ public class CourseTypeController {
     }
 
     @PostMapping
-    public CourseTypeResource createCourseType(@Valid @RequestBody CourseType courseType) {
-        return new CourseTypeResource(courseTypeRepository.save(courseType));
+    public ResponseEntity createCourseType(@Valid @RequestBody CourseType courseType) {
+        return ResponseEntity.created(new CourseTypeResource(courseTypeRepository.save(courseType)).getSelfRelURI()).build();
     }
 
     @GetMapping("{id}")
@@ -54,7 +54,7 @@ public class CourseTypeController {
         }
     }
 
-    @PutMapping("id")
+    @PutMapping("{id}")
     public ResponseEntity updateCourseType(@PathVariable("id") Long id, @Valid @RequestBody CourseType update) {
         if (!courseTypeRepository.exists(id)) return ResponseEntity.notFound().build();
         try {
@@ -67,13 +67,11 @@ public class CourseTypeController {
         }
     }
 
-    @GetMapping("{id}/courses")
-    public ResponseEntity<List<CourseResource>> getCoursesByCourseType(@PathVariable("id") Long id) {
+    @GetMapping("{id}/discounts")
+    public ResponseEntity<List<DiscountResource>> getDiscountsByCourseType(@PathVariable("id") Long id) {
         if (!courseTypeRepository.exists(id)) return ResponseEntity.notFound().build();
-        List<CourseResource> courseResources = courseRepository.findAllByCourseType(courseTypeRepository.findOne(id))
-                .stream()
-                .map(CourseResource::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(courseResources);
+        return ResponseEntity.ok(
+                discountRepository.getDiscountsByCourseType_Id(id).stream().map(DiscountResource::new).collect(Collectors.toList())
+        );
     }
 }

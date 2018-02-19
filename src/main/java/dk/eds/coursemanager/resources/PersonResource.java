@@ -8,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class PersonResource extends ResourceSupport {
+public class PersonResource extends ResourceSupportBase {
 
     private final Person person;
 

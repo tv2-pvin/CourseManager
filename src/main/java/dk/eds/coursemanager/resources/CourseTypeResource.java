@@ -7,7 +7,7 @@ import org.springframework.hateoas.ResourceSupport;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class CourseTypeResource extends ResourceSupport {
+public class CourseTypeResource extends ResourceSupportBase {
 
     private final CourseType courseType;
 

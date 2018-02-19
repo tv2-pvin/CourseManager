@@ -1,7 +1,6 @@
 package dk.eds.coursemanager.repositories;
 
 import dk.eds.coursemanager.models.Person;
-import dk.eds.coursemanager.models.User;
 import dk.eds.coursemanager.models.PersonType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +12,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     Person findPersonByUser_Username(String username);
 
     List<Person> findPeopleByPersonType(PersonType personType);
+
+    List<Person> findPeopleByPersonType_Id(Long id);
 }

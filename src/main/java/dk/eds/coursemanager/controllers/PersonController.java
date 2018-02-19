@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ import static dk.eds.coursemanager.controllers.helpers.PersonControllerHelper.se
 import static dk.eds.coursemanager.controllers.helpers.PersonControllerHelper.setLocation;
 
 @RestController
-@RequestMapping("api/people")
+@RequestMapping("api/person-types/{personTypeId}/people")
 public class PersonController {
 
     private final
@@ -46,37 +45,42 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PersonResource>> getAllPersons() {
-        return ResponseEntity.ok(personRepository.findAll().stream().filter(u -> u.getUser().isEnabled()).map(PersonResource::new).collect(Collectors.toList()));
+    public ResponseEntity<List<PersonResource>> getAllPersons(@PathVariable("personTypeId") Long personTypeId) {
+        return ResponseEntity.ok(personRepository.findPeopleByPersonType_Id(personTypeId).stream()
+                .filter(u -> u.getUser().isEnabled())
+                .map(PersonResource::new)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("{username}")
-    public ResponseEntity<PersonResource> getPerson(@PathVariable("username") String username) {
-        if (!userRepository.existsByUsername(username)) return ResponseEntity.notFound().build();
+    public ResponseEntity<PersonResource> getPerson(@PathVariable("personTypeId") Long personTypeId, @PathVariable("username") String username) {
+        if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(new PersonResource(personRepository.findPersonByUser_Username(username)));
     }
 
     @PostMapping
-    public ResponseEntity createUser(@Valid @RequestBody Person person) {
-        if (!personTypeRepository.exists(person.getPersonType().getId())) return ResponseEntity.notFound().build();
+    public ResponseEntity createUser(@PathVariable("personTypeId") Long personTypeId, @Valid @RequestBody Person person) {
+        if (!personTypeRepository.exists(personTypeId)) return ResponseEntity.notFound().build();
 
         person.getUser().setPassword(new BCryptPasswordEncoder().encode(person.getUser().getPassword()));
         person.setUser(userRepository.save(person.getUser()));
 
-        person.setPersonType(personTypeRepository.findOne(person.getPersonType().getId()));
+        person.setPersonType(personTypeRepository.findOne(personTypeId));
 
         setCity(person, cityRepository);
         setLocation(person, locationRepository);
 
         person = personRepository.save(person);
 
-        return ResponseEntity.created(URI.create(new PersonResource(person).getLink("self").getHref())).build();
+        return ResponseEntity.created(new PersonResource(person).getSelfRelURI()).build();
     }
 
 
     @PutMapping("{username}")
-    public ResponseEntity updatePerson(@PathVariable("username") String username, @Valid @RequestBody Person person) {
-        if (!userRepository.existsByUsername(username)) return ResponseEntity.notFound().build();
+    public ResponseEntity updatePerson(@PathVariable("personTypeId") Long personTypeId, @PathVariable("username") String username, @Valid @RequestBody Person person) {
+        if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
+            return ResponseEntity.notFound().build();
         try {
             Person p = personRepository.findPersonByUser_Username(username);
             User u = p.getUser();
