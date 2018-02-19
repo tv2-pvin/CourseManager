@@ -17,7 +17,7 @@ public class Discount {
     private int discountTrigger;
 
     @Column(nullable = false)
-    private float discount_amount;
+    private float discountAmount;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private ParticipantType participantType;
@@ -25,9 +25,9 @@ public class Discount {
     @ManyToOne(fetch = FetchType.EAGER)
     private CourseType courseType;
 
-    public Discount(int discountTrigger, float discount_amount, ParticipantType participantType, CourseType courseType) {
+    public Discount(int discountTrigger, float discountAmount, ParticipantType participantType, CourseType courseType) {
         this.discountTrigger = discountTrigger;
-        this.discount_amount = discount_amount;
+        this.discountAmount = discountAmount;
         this.participantType = participantType;
         this.courseType = courseType;
     }
@@ -48,12 +48,12 @@ public class Discount {
         this.discountTrigger = discountTrigger;
     }
 
-    public float getDiscount_amount() {
-        return discount_amount;
+    public float getDiscountAmount() {
+        return discountAmount;
     }
 
-    public void setDiscount_amount(float discount_amount) {
-        this.discount_amount = discount_amount;
+    public void setDiscountAmount(float discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
     public ParticipantType getParticipantType() {
