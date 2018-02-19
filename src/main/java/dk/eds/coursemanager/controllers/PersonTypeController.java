@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping("api/person-types")
 public class PersonTypeController {
 
-    private final
-    PersonTypeRepository personTypeRepository;
+    private final PersonTypeRepository personTypeRepository;
     private final PersonRepository personRepository;
 
     @Autowired

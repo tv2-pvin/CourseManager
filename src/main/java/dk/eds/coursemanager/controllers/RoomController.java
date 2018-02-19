@@ -21,14 +21,18 @@ import java.util.stream.Collectors;
 @RequestMapping("api/rooms")
 public class RoomController {
 
+    private final RoomRepository roomRepository;
+    private final LocationRepository locationRepository;
+    private final CityRepository cityRepository;
+    private final BookingRepository bookingRepository;
+
     @Autowired
-    RoomRepository roomRepository;
-    @Autowired
-    LocationRepository locationRepository;
-    @Autowired
-    CityRepository cityRepository;
-    @Autowired
-    BookingRepository bookingRepository;
+    public RoomController(RoomRepository roomRepository, LocationRepository locationRepository, CityRepository cityRepository, BookingRepository bookingRepository) {
+        this.roomRepository = roomRepository;
+        this.locationRepository = locationRepository;
+        this.cityRepository = cityRepository;
+        this.bookingRepository = bookingRepository;
+    }
 
     @GetMapping
     public List<RoomResource> getAllRooms() {

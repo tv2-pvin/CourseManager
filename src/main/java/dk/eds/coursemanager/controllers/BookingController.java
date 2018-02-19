@@ -19,14 +19,18 @@ import java.util.stream.Collectors;
 @RequestMapping("api/bookings")
 public class BookingController {
 
+    private final BookingRepository bookingRepository;
+    private final RoomRepository roomRepository;
+    private final PersonRepository personRepository;
+    private final CourseRepository courseRepository;
+
     @Autowired
-    BookingRepository bookingRepository;
-    @Autowired
-    RoomRepository roomRepository;
-    @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    CourseRepository courseRepository;
+    public BookingController(BookingRepository bookingRepository, RoomRepository roomRepository, PersonRepository personRepository, CourseRepository courseRepository) {
+        this.bookingRepository = bookingRepository;
+        this.roomRepository = roomRepository;
+        this.personRepository = personRepository;
+        this.courseRepository = courseRepository;
+    }
 
     @GetMapping
     public List<BookingResource> getAllBookings(@RequestParam(name = "from", required = false) Date from, @RequestParam(name = "to", required = false) Date to) {

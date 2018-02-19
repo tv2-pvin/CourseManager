@@ -18,14 +18,18 @@ import java.util.stream.Collectors;
 @RequestMapping("api/participants")
 public class ParticipantController {
 
+    private final ParticipantRepository participantRepository;
+    private final CourseRepository courseRepository;
+    private final PersonRepository personRepository;
+    private final ParticipantTypeRepository participantTypeRepository;
+
     @Autowired
-    ParticipantRepository participantRepository;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    ParticipantTypeRepository participantTypeRepository;
+    public ParticipantController(ParticipantRepository participantRepository, CourseRepository courseRepository, PersonRepository personRepository, ParticipantTypeRepository participantTypeRepository) {
+        this.participantRepository = participantRepository;
+        this.courseRepository = courseRepository;
+        this.personRepository = personRepository;
+        this.participantTypeRepository = participantTypeRepository;
+    }
 
     @GetMapping
     public List<ParticipantResource> getAllParticipants() {

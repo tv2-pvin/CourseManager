@@ -24,20 +24,13 @@ import static dk.eds.coursemanager.controllers.helpers.PersonControllerHelper.se
 @RequestMapping("api/person-types/{personTypeId}/people")
 public class PersonController {
 
-    private final
-    PersonRepository personRepository;
-    private final
-    LocationRepository locationRepository;
-    private final
-    CityRepository cityRepository;
-    private final
-    PersonTypeRepository personTypeRepository;
-    private final
-    UserRepository userRepository;
-    private final
-    BookingRepository bookingRepository;
-    private final
-    ParticipantRepository participantRepository;
+    private final PersonRepository personRepository;
+    private final LocationRepository locationRepository;
+    private final CityRepository cityRepository;
+    private final PersonTypeRepository personTypeRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final ParticipantRepository participantRepository;
 
     @Autowired
     public PersonController(PersonRepository personRepository, LocationRepository locationRepository, CityRepository cityRepository, PersonTypeRepository personTypeRepository, UserRepository userRepository, BookingRepository bookingRepository, ParticipantRepository participantRepository) {

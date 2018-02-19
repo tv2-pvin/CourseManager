@@ -17,12 +17,16 @@ import java.util.stream.Collectors;
 @RequestMapping("api/prices")
 public class PriceController {
 
+    private final PriceRepository priceRepository;
+    private final CourseRepository courseRepository;
+    private final ParticipantTypeRepository participantTypeRepository;
+
     @Autowired
-    PriceRepository priceRepository;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    ParticipantTypeRepository participantTypeRepository;
+    public PriceController(PriceRepository priceRepository, CourseRepository courseRepository, ParticipantTypeRepository participantTypeRepository) {
+        this.priceRepository = priceRepository;
+        this.courseRepository = courseRepository;
+        this.participantTypeRepository = participantTypeRepository;
+    }
 
     @GetMapping
     public List<PriceResource> getAllPrices() {

@@ -19,12 +19,16 @@ import java.util.stream.Collectors;
 @RequestMapping("api/participant-types")
 public class ParticipantTypeController {
 
+    private final ParticipantTypeRepository participantTypeRepository;
+    private final ParticipantRepository participantRepository;
+    private final PriceRepository priceRepository;
+
     @Autowired
-    ParticipantTypeRepository participantTypeRepository;
-    @Autowired
-    ParticipantRepository participantRepository;
-    @Autowired
-    PriceRepository priceRepository;
+    public ParticipantTypeController(ParticipantTypeRepository participantTypeRepository, ParticipantRepository participantRepository, PriceRepository priceRepository) {
+        this.participantTypeRepository = participantTypeRepository;
+        this.participantRepository = participantRepository;
+        this.priceRepository = priceRepository;
+    }
 
     @GetMapping
     public List<ParticipantTypeResource> getParticipantTypes() {
