@@ -1,10 +1,12 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.ParticipantType;
-import dk.eds.coursemanager.repositories.CourseParticipantRepository;
+import dk.eds.coursemanager.repositories.ParticipantRepository;
 import dk.eds.coursemanager.repositories.ParticipantTypeRepository;
+import dk.eds.coursemanager.repositories.PriceRepository;
 import dk.eds.coursemanager.resources.ParticipantResource;
 import dk.eds.coursemanager.resources.ParticipantTypeResource;
+import dk.eds.coursemanager.resources.PriceResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,9 @@ public class ParticipantTypeController {
     @Autowired
     ParticipantTypeRepository participantTypeRepository;
     @Autowired
-    CourseParticipantRepository courseParticipantRepository;
+    ParticipantRepository participantRepository;
+    @Autowired
+    PriceRepository priceRepository;
 
     @GetMapping
     public List<ParticipantTypeResource> getParticipantTypes() {
@@ -63,11 +67,20 @@ public class ParticipantTypeController {
     }
 
     @GetMapping("{id}/participants")
-    public ResponseEntity<List<ParticipantResource>> getCourseParticipants(@PathVariable("id") Long id) {
+    public ResponseEntity<List<ParticipantResource>> getParticipants(@PathVariable("id") Long id) {
         if (!participantTypeRepository.exists(id))
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(
-                courseParticipantRepository.findAllByParticipantType_Id(id).stream().map(ParticipantResource::new).collect(Collectors.toList())
+                participantRepository.findAllByParticipantType_Id(id).stream().map(ParticipantResource::new).collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("{id}/prices")
+    public ResponseEntity<List<PriceResource>> getPrices(@PathVariable("id") Long id) {
+        if (!participantTypeRepository.exists(id))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                priceRepository.getAllByParticipantType_Id(id).stream().map(PriceResource::new).collect(Collectors.toList())
         );
     }
 }

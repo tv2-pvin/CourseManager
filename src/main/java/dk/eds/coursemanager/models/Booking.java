@@ -25,9 +25,9 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)
     private Room room;
     @ManyToOne(fetch = FetchType.EAGER)
-    private User booker;
+    private Person booker;
 
-    public Booking(Date fromTime, Date toTime, Course course, Room room, User booker) {
+    public Booking(Date fromTime, Date toTime, Course course, Room room, Person booker) {
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.course = course;
@@ -75,11 +75,11 @@ public class Booking {
         this.room = room;
     }
 
-    public User getBooker() {
+    public Person getBooker() {
         return booker;
     }
 
-    public void setBooker(User booker) {
+    public void setBooker(Person booker) {
         this.booker = booker;
     }
 }

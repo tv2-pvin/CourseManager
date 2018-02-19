@@ -5,9 +5,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "participant_type_course_price")
+@Table(name = "price")
 @EntityListeners(AuditingEntityListener.class)
-public class ParticipantTypeCoursePrice {
+public class Price {
 
     @Id
     @GeneratedValue
@@ -16,13 +16,13 @@ public class ParticipantTypeCoursePrice {
     @Column(nullable = false)
     private Float price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private ParticipantType participantType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
 
-    public ParticipantTypeCoursePrice(Float price, ParticipantType participantType, Course course) {
+    public Price(Float price, ParticipantType participantType, Course course) {
         this.price = price;
         this.participantType = participantType;
         this.course = course;

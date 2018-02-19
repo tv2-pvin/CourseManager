@@ -1,7 +1,9 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.PersonType;
+import dk.eds.coursemanager.repositories.PersonRepository;
 import dk.eds.coursemanager.repositories.PersonTypeRepository;
+import dk.eds.coursemanager.resources.PersonResource;
 import dk.eds.coursemanager.resources.PersonTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,12 @@ public class PersonTypeController {
 
     private final
     PersonTypeRepository personTypeRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public PersonTypeController(PersonTypeRepository personTypeRepository) {
+    public PersonTypeController(PersonTypeRepository personTypeRepository, PersonRepository personRepository) {
         this.personTypeRepository = personTypeRepository;
+        this.personRepository = personRepository;
     }
 
     @PostMapping
@@ -41,5 +45,15 @@ public class PersonTypeController {
             return ResponseEntity.ok(new PersonTypeResource(personTypeRepository.findOne(id)));
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("people")
+    public ResponseEntity<List<PersonResource>> getAllPerson() {
+        return ResponseEntity.ok(
+                personRepository.findAll().stream()
+                        .filter(p -> p.getUser().isEnabled())
+                        .map(PersonResource::new)
+                        .collect(Collectors.toList())
+        );
     }
 }

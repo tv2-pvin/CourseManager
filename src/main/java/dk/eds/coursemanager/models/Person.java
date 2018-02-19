@@ -1,10 +1,13 @@
 package dk.eds.coursemanager.models;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "person")
+@EntityListeners(AuditingEntityListener.class)
 public class Person {
 
     @Id
@@ -25,7 +28,6 @@ public class Person {
     @NotBlank
     @Column(nullable = false)
     private String email;
-    private String username;
 
     public Person() {
     }
@@ -84,9 +86,5 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return user.getUsername();
     }
 }

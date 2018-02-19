@@ -25,7 +25,8 @@ public class DiscountController {
     CourseTypeRepository courseTypeRepository;
 
     @GetMapping
-    public List<DiscountResource> getAllDiscounts(@RequestParam("course-type-id") Long courseTypeId, @RequestParam("participant-type-id") Long participantTypeId) {
+    public List<DiscountResource> getAllDiscounts(@RequestParam(value = "course-type-id", required = false) Long courseTypeId,
+                                                  @RequestParam(value = "participant-type-id", required = false) Long participantTypeId) {
         List<Discount> discounts;
         if (courseTypeId == null && participantTypeId == null)
             discounts = discountRepository.findAll();

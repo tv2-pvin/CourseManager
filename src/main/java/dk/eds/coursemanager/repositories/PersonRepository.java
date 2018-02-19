@@ -9,9 +9,11 @@ import java.util.List;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    Person findPersonByUser_Username(String username);
+    Person getPersonByUser_Username(String username);
 
     List<Person> findPeopleByPersonType(PersonType personType);
 
     List<Person> findPeopleByPersonType_Id(Long id);
+
+    boolean existsPersonByUser_Username(String username);
 }

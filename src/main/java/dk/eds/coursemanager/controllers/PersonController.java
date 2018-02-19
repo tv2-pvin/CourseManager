@@ -1,10 +1,11 @@
 package dk.eds.coursemanager.controllers;
 
-import dk.eds.coursemanager.models.City;
 import dk.eds.coursemanager.models.Location;
 import dk.eds.coursemanager.models.Person;
 import dk.eds.coursemanager.models.User;
 import dk.eds.coursemanager.repositories.*;
+import dk.eds.coursemanager.resources.BookingResource;
+import dk.eds.coursemanager.resources.ParticipantResource;
 import dk.eds.coursemanager.resources.PersonResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dk.eds.coursemanager.controllers.helpers.ControllerUtils.createOrFetchCity;
 import static dk.eds.coursemanager.controllers.helpers.ControllerUtils.createOrFetchLocation;
 import static dk.eds.coursemanager.controllers.helpers.PersonControllerHelper.setCity;
 import static dk.eds.coursemanager.controllers.helpers.PersonControllerHelper.setLocation;
@@ -34,14 +34,20 @@ public class PersonController {
     PersonTypeRepository personTypeRepository;
     private final
     UserRepository userRepository;
+    private final
+    BookingRepository bookingRepository;
+    private final
+    ParticipantRepository participantRepository;
 
     @Autowired
-    public PersonController(PersonRepository personRepository, LocationRepository locationRepository, CityRepository cityRepository, PersonTypeRepository personTypeRepository, UserRepository userRepository) {
+    public PersonController(PersonRepository personRepository, LocationRepository locationRepository, CityRepository cityRepository, PersonTypeRepository personTypeRepository, UserRepository userRepository, BookingRepository bookingRepository, ParticipantRepository participantRepository) {
         this.personRepository = personRepository;
         this.locationRepository = locationRepository;
         this.cityRepository = cityRepository;
         this.personTypeRepository = personTypeRepository;
         this.userRepository = userRepository;
+        this.bookingRepository = bookingRepository;
+        this.participantRepository = participantRepository;
     }
 
     @GetMapping
@@ -56,7 +62,7 @@ public class PersonController {
     public ResponseEntity<PersonResource> getPerson(@PathVariable("personTypeId") Long personTypeId, @PathVariable("username") String username) {
         if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
             return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(new PersonResource(personRepository.findPersonByUser_Username(username)));
+        return ResponseEntity.ok(new PersonResource(personRepository.getPersonByUser_Username(username)));
     }
 
     @PostMapping
@@ -82,19 +88,35 @@ public class PersonController {
         if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
             return ResponseEntity.notFound().build();
         try {
-            Person p = personRepository.findPersonByUser_Username(username);
+            Person p = personRepository.getPersonByUser_Username(username);
             User u = p.getUser();
             u.setPassword(new BCryptPasswordEncoder().encode(person.getUser().getPassword()));
             userRepository.save(u);
             p.setUser(u);
-            City city = createOrFetchCity(person, cityRepository);
-            Location location = createOrFetchLocation(person, locationRepository);
-            location.setCity(city);
+            Location location = createOrFetchLocation(person.getLocation(), locationRepository, cityRepository);
             p.setLocation(location);
             Person save = personRepository.save(p);
             return ResponseEntity.ok(new PersonResource(save));
         } catch (Exception ex) {
             return ResponseEntity.status(304).build();
         }
+    }
+
+    @GetMapping("{username}/bookings")
+    public ResponseEntity<List<BookingResource>> getBookings(@PathVariable("personTypeId") Long personTypeId, @PathVariable("username") String username) {
+        if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                bookingRepository.getAllByBooker_User_Username(username).stream().map(BookingResource::new).collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("{username}/participants")
+    public ResponseEntity<List<ParticipantResource>> getParticipants(@PathVariable("personTypeId") Long personTypeId, @PathVariable("username") String username) {
+        if (!personTypeRepository.exists(personTypeId) || !userRepository.existsByUsername(username))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                participantRepository.findAllByPerson_User_Username(username).stream().map(ParticipantResource::new).collect(Collectors.toList())
+        );
     }
 }

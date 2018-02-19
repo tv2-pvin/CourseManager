@@ -1,11 +1,11 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.Course;
-import dk.eds.coursemanager.repositories.CourseParticipantRepository;
-import dk.eds.coursemanager.repositories.CourseRepository;
-import dk.eds.coursemanager.repositories.CourseTypeRepository;
-import dk.eds.coursemanager.resources.ParticipantResource;
+import dk.eds.coursemanager.repositories.*;
+import dk.eds.coursemanager.resources.BookingResource;
 import dk.eds.coursemanager.resources.CourseResource;
+import dk.eds.coursemanager.resources.ParticipantResource;
+import dk.eds.coursemanager.resources.PriceResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +20,21 @@ public class CourseController {
 
     private final CourseRepository courseRepository;
     private final CourseTypeRepository courseTypeRepository;
-    private final CourseParticipantRepository courseParticipantRepository;
+    private final ParticipantRepository participantRepository;
+    private final BookingRepository bookingRepository;
+    private final PriceRepository priceRepository;
 
     @Autowired
-    public CourseController(CourseRepository courseRepository, CourseTypeRepository courseTypeRepository, CourseParticipantRepository courseParticipantRepository) {
+    public CourseController(CourseRepository courseRepository, CourseTypeRepository courseTypeRepository, ParticipantRepository participantRepository, BookingRepository bookingRepository, PriceRepository priceRepository) {
         this.courseRepository = courseRepository;
         this.courseTypeRepository = courseTypeRepository;
-        this.courseParticipantRepository = courseParticipantRepository;
+        this.participantRepository = participantRepository;
+        this.bookingRepository = bookingRepository;
+        this.priceRepository = priceRepository;
     }
 
     @GetMapping
-    public List<CourseResource> getAllCourses(@PathVariable("courseTypeId") Long id) {
+    public List<CourseResource> getAllCoursesForType(@PathVariable("courseTypeId") Long id) {
         return courseRepository.findAllByCourseType_Id(id).stream()
                 .map(CourseResource::new)
                 .collect(Collectors.toList());
@@ -84,7 +88,25 @@ public class CourseController {
         if (!courseTypeRepository.exists(courseTypeId) || !courseRepository.exists(id))
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(
-                courseParticipantRepository.findAllByCourse_Id(id).stream().map(ParticipantResource::new).collect(Collectors.toList())
+                participantRepository.findAllByCourse_Id(id).stream().map(ParticipantResource::new).collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("{id}/bookings")
+    public ResponseEntity<List<BookingResource>> getCourseBookings(@PathVariable("courseTypeId") Long courseTypeId, @PathVariable("id") Long id) {
+        if (!courseTypeRepository.exists(courseTypeId) || !courseRepository.exists(id))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                bookingRepository.getAllByCourse_Id(id).stream().map(BookingResource::new).collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("{id}/prices")
+    public ResponseEntity<List<PriceResource>> getCoursePrices(@PathVariable("courseTypeId") Long courseTypeId, @PathVariable("id") Long id) {
+        if (!courseTypeRepository.exists(courseTypeId) || !courseRepository.exists(id))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                priceRepository.getAllByCourse_Id(id).stream().map(PriceResource::new).collect(Collectors.toList())
         );
     }
 }

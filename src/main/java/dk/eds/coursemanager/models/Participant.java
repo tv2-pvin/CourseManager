@@ -14,13 +14,19 @@ public class Participant {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Person participant;
+    private Person person;
     @ManyToOne(fetch = FetchType.EAGER)
     private ParticipantType participantType;
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
 
     public Participant() {
+    }
+
+    public Participant(Person person, ParticipantType participantType, Course course) {
+        this.person = person;
+        this.participantType = participantType;
+        this.course = course;
     }
 
     public Long getId() {
@@ -31,12 +37,12 @@ public class Participant {
         this.id = id;
     }
 
-    public Person getParticipant() {
-        return participant;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setParticipant(Person participant) {
-        this.participant = participant;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public ParticipantType getParticipantType() {

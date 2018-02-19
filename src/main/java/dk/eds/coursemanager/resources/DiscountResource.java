@@ -14,9 +14,11 @@ public class DiscountResource extends ResourceSupportBase {
 
     public DiscountResource(Discount discount) {
         this.discount = discount;
-        this.add(linkTo(methodOn(DiscountController.class).getDiscount(discount.getId())).withSelfRel());
-        this.add(linkTo(methodOn(CourseTypeController.class).getCourseType(discount.getCourseType().getId())).withRel("course-type"));
-        this.add(linkTo(methodOn(ParticipantTypeController.class).getParticipantType(discount.getParticipantType().getId())).withRel("participant-type"));
+        this.add(
+                linkTo(methodOn(DiscountController.class).getDiscount(discount.getId())).withSelfRel(),
+                linkTo(methodOn(CourseTypeController.class).getCourseType(discount.getCourseType().getId())).withRel("course-type"),
+                linkTo(methodOn(ParticipantTypeController.class).getParticipantType(discount.getParticipantType().getId())).withRel("participant-type")
+        );
     }
 
     public Discount getDiscount() {
