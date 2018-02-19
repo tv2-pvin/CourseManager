@@ -5,6 +5,7 @@ import dk.eds.coursemanager.repositories.CourseTypeRepository;
 import dk.eds.coursemanager.repositories.DiscountRepository;
 import dk.eds.coursemanager.repositories.ParticipantTypeRepository;
 import dk.eds.coursemanager.resources.DiscountResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class DiscountController {
     private final ParticipantTypeRepository participantTypeRepository;
     private final CourseTypeRepository courseTypeRepository;
 
+    @Autowired
     public DiscountController(DiscountRepository discountRepository, ParticipantTypeRepository participantTypeRepository, CourseTypeRepository courseTypeRepository) {
         this.discountRepository = discountRepository;
         this.participantTypeRepository = participantTypeRepository;
