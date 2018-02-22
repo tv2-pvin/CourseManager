@@ -1,8 +1,10 @@
 package dk.eds.coursemanager.controllers;
 
 import dk.eds.coursemanager.models.CourseType;
+import dk.eds.coursemanager.repositories.CourseRepository;
 import dk.eds.coursemanager.repositories.CourseTypeRepository;
 import dk.eds.coursemanager.repositories.DiscountRepository;
+import dk.eds.coursemanager.resources.CourseResource;
 import dk.eds.coursemanager.resources.CourseTypeResource;
 import dk.eds.coursemanager.resources.DiscountResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,13 @@ public class CourseTypeController {
 
     private final CourseTypeRepository courseTypeRepository;
     private final DiscountRepository discountRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseTypeController(CourseTypeRepository courseTypeRepository, DiscountRepository discountRepository) {
+    public CourseTypeController(CourseTypeRepository courseTypeRepository, DiscountRepository discountRepository, CourseRepository courseRepository) {
         this.courseTypeRepository = courseTypeRepository;
         this.discountRepository = discountRepository;
+        this.courseRepository = courseRepository;
     }
 
 
@@ -73,5 +77,12 @@ public class CourseTypeController {
         return ResponseEntity.ok(
                 discountRepository.getDiscountsByCourseType_Id(id).stream().map(DiscountResource::new).collect(Collectors.toList())
         );
+    }
+
+    @GetMapping("courses")
+    public List<CourseResource> getAllCourses() {
+        return courseRepository.findAll().stream()
+                .map(CourseResource::new)
+                .collect(Collectors.toList());
     }
 }

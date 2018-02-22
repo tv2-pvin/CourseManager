@@ -42,6 +42,9 @@ public class ParticipantController {
                 !courseRepository.exists(participant.getCourse().getId()) ||
                 !personRepository.existsPersonByUser_Username(participant.getPerson().getUser().getUsername()))
             return ResponseEntity.notFound().build();
+        participant.setPerson(personRepository.getPersonByUser_Username(participant.getPerson().getUser().getUsername()));
+        participant.setCourse(courseRepository.findOne(participant.getCourse().getId()));
+        participant.setParticipantType(participantTypeRepository.findOne(participant.getParticipantType().getId()));
         return ResponseEntity.created(new ParticipantResource(participantRepository.save(participant)).getSelfRelURI()).build();
     }
 

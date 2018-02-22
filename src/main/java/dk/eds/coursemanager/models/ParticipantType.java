@@ -17,6 +17,9 @@ public class ParticipantType {
     @Column(nullable = false)
     private String name;
 
+    public ParticipantType() {
+    }
+
     ParticipantType(String name) {
         this.name = name;
     }

@@ -25,7 +25,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("${gigy.ouath.tokenTimeout:3600}")
+    @Value("${gigy.oauth.tokenTimeout:3600}")
     private int expiration;
 
     @Bean
@@ -41,7 +41,11 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("eds").secret("elitedans").accessTokenValiditySeconds(expiration)
-                .scopes("read", "write").authorizedGrantTypes("password", "refresh_token").resourceIds("resource");
+        clients.inMemory().withClient("eds")
+                .secret("elitedans")
+                .accessTokenValiditySeconds(expiration)
+                .scopes("read", "write")
+                .authorizedGrantTypes("password", "refresh_token", "client_credentials")
+                .resourceIds("resource");
     }
 }
